@@ -1,0 +1,84 @@
+# EchoPilot Configuration File
+# This file contains configurable parameters for tuning the AI assistant
+
+# Model Configuration
+model:
+  name: "gemini-2.5-flash"
+  provider: "google_genai"
+
+# Retrieval Configuration
+retrieval:
+  # Number of documents to retrieve from vector store
+  k: 6
+  # Search type for vector store (similarity or mmr for diversity)
+  search_type: "mmr"
+  # Minimum relevance threshold for document filtering (0.0-1.0)
+  threshold: 0.25
+  # MMR diversity parameter (0.0 = maximum diversity, 1.0 = maximum relevance)
+  diversity_lambda: 0.5
+
+# RAG Scoring Configuration
+rag_scoring:
+  # Scoring weights (must sum to 1.0)
+  weights:
+    semantic: 0.4    # Weight for vector similarity scores
+    keyword: 0.3     # Weight for keyword/TF-IDF matching
+    quality: 0.2     # Weight for document quality metrics
+    recency: 0.1     # Weight for document recency
+
+  # TF-IDF Configuration for keyword scoring
+  tfidf:
+    max_features: 1000
+    ngram_range: [1, 2]
+    stop_words: "english"
+
+  # Default threshold for filtering scored documents
+  default_threshold: 0.3
+
+# Document Processing Configuration
+document_processing:
+  # Text chunking parameters
+  chunking:
+    chunk_size: 1000
+    chunk_overlap: 200
+
+  # Supported file types
+  supported_extensions:
+    - ".pdf"
+    - ".docx"
+    - ".txt"
+    - ".md"
+
+# Chat Configuration
+chat:
+  # Maximum number of results to return from retriever tool
+  max_retrieval_results: 8
+
+  # Chat summarization
+  summary:
+    max_length_chars: 200
+
+# Logging Configuration
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+
+# Multi-Agent Workflow Configuration
+multi_agent:
+  # Enable/disable multi-agent workflow (keep false until Phase 4)
+  enabled: false
+  
+  # Thresholds for decision making
+  thresholds:
+    # Below this confidence, escalate to human
+    min_confidence: 0.7
+    # Use MMR (diversity search) for claim verification
+    diversity_search: true
+  
+  # Decision making configuration
+  decision:
+    # Require at least this many policy references for valid claims
+    min_policy_citations: 1
+    # Hard limit for auto-approved refunds
+    max_refund_amount: 50000
+  
